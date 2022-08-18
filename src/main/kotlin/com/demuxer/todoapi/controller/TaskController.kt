@@ -13,31 +13,31 @@ class TaskController(
     @Autowired private val taskService: TaskService
 ) {
 
-    @GetMapping("/")
+    @GetMapping("/task")
     @ResponseStatus(HttpStatus.OK)
     fun getAll() : Response<List<TaskDTO>> {
         return Response(taskService.getAll())
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/task/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun getById(@PathVariable id: UUID) : Response<TaskDTO> {
         return Response(taskService.getById(id))
     }
 
-    @PostMapping("/")
+    @PostMapping("/task")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody task: TaskDTO) : Response<TaskDTO> {
         return Response(taskService.create(task))
     }
 
-    @PutMapping("/")
+    @PutMapping("/task")
     @ResponseStatus(HttpStatus.OK)
-    fun update(@RequestBody task: TaskDTO) : Response<TaskDTO> {
-        return Response(taskService.update(task))
+    fun update(@RequestBody task: TaskDTO) {
+        taskService.update(task)
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/task/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun delete(@PathVariable id: UUID) {
         taskService.delete(id)

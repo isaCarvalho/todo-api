@@ -24,19 +24,19 @@ class SubTaskController(
         return Response(subTaskService.getById(id))
     }
 
-    @PostMapping("/")
+    @PostMapping("/subtask")
     @ResponseStatus(HttpStatus.CREATED)
     fun create(@RequestBody subTask: SubTaskDTO) : Response<SubTaskDTO> {
         return Response(subTaskService.create(subTask))
     }
 
-    @PutMapping("/")
+    @PutMapping("/subtask")
     @ResponseStatus(HttpStatus.OK)
     fun update(@RequestBody subTask: SubTaskDTO) : Response<SubTaskDTO> {
         return Response(subTaskService.update(subTask))
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/subtask/{id}")
     @ResponseStatus(HttpStatus.OK)
     fun delete(@PathVariable id: UUID) {
         subTaskService.delete(id)

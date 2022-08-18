@@ -24,11 +24,11 @@ class TaskService(
         return TaskEntity.toDTO(taskRepository.save(TaskDTO.toEntity(task)))
     }
 
-    fun update(task: TaskDTO) : TaskDTO {
-        return TaskEntity.toDTO(taskRepository.save(TaskDTO.toEntity(task)))
+    fun update(task: TaskDTO) {
+        taskRepository.update(task.id, task.description, task.startDate, task.endDate)
     }
 
     fun delete(id: UUID) {
-        taskRepository.deleteById(id)
+        taskRepository.delete(id)
     }
 }
