@@ -22,4 +22,7 @@ interface TaskRepository : JpaRepository<TaskEntity, UUID> {
     @Transactional
     @Query("DELETE FROM TaskEntity t WHERE t.id = :id")
     fun delete(@Param("id") id : UUID) : Int
+
+    @Query("SELECT t.id, t.description, t.startDate, t.endDate FROM TaskEntity t WHERE t.id = :id")
+    fun get(@Param("id") id : UUID) : TaskEntity?
 }

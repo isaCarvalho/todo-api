@@ -34,6 +34,15 @@ class TaskRepositoryTest {
     }
 
     @Test
+    fun getTaskTest() {
+        // given
+        val task = taskRepository.get(taskId)
+
+        // then
+        Assertions.assertNotEquals(null, task)
+    }
+
+    @Test
     fun saveTaskWithSuccessTest() {
         // given
         val task = TaskEntity(UUID.randomUUID(), taskDescription, startDate, endDate)
@@ -72,18 +81,20 @@ class TaskRepositoryTest {
     @Test
     fun deleteTaskWithErrorTest() {
         // when
-        taskRepository.delete(UUID.randomUUID())
+        val deleteCode = taskRepository.delete(UUID.randomUUID())
 
         // then
+        Assertions.assertEquals(0, deleteCode)
         Assertions.assertEquals(1, taskRepository.count())
     }
 
     @Test
     fun deleteTaskWithSuccessTest() {
         // when
-        taskRepository.delete(taskId)
+        val deleteCode = taskRepository.delete(taskId)
 
         // then
+        Assertions.assertEquals(1, deleteCode)
         Assertions.assertEquals(0, taskRepository.count())
     }
 }
