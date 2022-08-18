@@ -13,22 +13,22 @@ class TaskService(
     @Autowired private val taskRepository: TaskRepository
 ) {
     fun getAll() : List<TaskDTO> {
-        return taskRepository.findAll().map { TaskEntity.toTaskDTO(it) }
+        return taskRepository.findAll().map { TaskEntity.toDTO(it) }
     }
 
-    fun getById(@PathVariable id: UUID) : TaskDTO {
-        return TaskEntity.toTaskDTO(taskRepository.getReferenceById(id))
+    fun getById(id: UUID) : TaskDTO {
+        return TaskEntity.toDTO(taskRepository.getReferenceById(id))
     }
 
-    fun create(@RequestBody task: TaskDTO) : TaskDTO {
-        return TaskEntity.toTaskDTO(taskRepository.save(TaskDTO.toTaskEntity(task)))
+    fun create(task: TaskDTO) : TaskDTO {
+        return TaskEntity.toDTO(taskRepository.save(TaskDTO.toEntity(task)))
     }
 
-    fun update(@RequestBody task: TaskDTO) : TaskDTO {
-        return TaskEntity.toTaskDTO(taskRepository.save(TaskDTO.toTaskEntity(task)))
+    fun update(task: TaskDTO) : TaskDTO {
+        return TaskEntity.toDTO(taskRepository.save(TaskDTO.toEntity(task)))
     }
 
-    fun delete(@PathVariable id: UUID) {
+    fun delete(id: UUID) {
         taskRepository.deleteById(id)
     }
 }

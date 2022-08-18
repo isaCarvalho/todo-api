@@ -11,6 +11,6 @@ data class TaskDTO(
     val endDate: Date
 ) {
     companion object {
-        fun toTaskEntity(taskDTO: TaskDTO) = TaskEntity(taskDTO.id, taskDTO.description, taskDTO.startDate, taskDTO.endDate)
+        fun toEntity(taskDTO: TaskDTO) = TaskEntity(taskDTO.id, taskDTO.description, taskDTO.startDate, taskDTO.endDate)
     }
 }
