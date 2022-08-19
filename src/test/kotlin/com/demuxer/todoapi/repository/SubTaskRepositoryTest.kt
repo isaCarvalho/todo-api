@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
 
+// TODO fix tests
 @SpringBootTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SubTaskRepositoryTest {
 
     @Autowired
@@ -47,7 +47,7 @@ class SubTaskRepositoryTest {
     @Test
     fun getAllTest() {
         // when
-        val subTasks = subTaskRepository.findAll()
+        val subTasks = subTaskRepository.findAll().toList()
 
         // then
         Assertions.assertEquals(2, subTasks.size)

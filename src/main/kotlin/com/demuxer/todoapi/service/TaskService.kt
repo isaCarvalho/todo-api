@@ -4,8 +4,8 @@ import com.demuxer.todoapi.dto.TaskDTO
 import com.demuxer.todoapi.entity.TaskEntity
 import com.demuxer.todoapi.repository.TaskRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @Service
@@ -16,8 +16,10 @@ class TaskService(
         return taskRepository.findAll().map { TaskEntity.toDTO(it) }
     }
 
-    fun getById(id: UUID) : TaskDTO {
-        return TaskEntity.toDTO(taskRepository.getReferenceById(id))
+    fun getById(id: UUID) : TaskDTO? {
+        val task = taskRepository.findByIdOrNull(id) ?: return null
+
+        return TaskEntity.toDTO(task)
     }
 
     fun create(task: TaskDTO) : TaskDTO {
@@ -25,10 +27,10 @@ class TaskService(
     }
 
     fun update(task: TaskDTO) {
-        taskRepository.update(task.id, task.description, task.startDate, task.endDate)
+        taskRepository.save(TaskDTO.toEntity(task))
     }
 
-    fun delete(id: UUID) {
-        taskRepository.delete(id)
+    fun delete(task: TaskDTO) {
+        taskRepository.delete(TaskDTO.toEntity(task))
     }
 }

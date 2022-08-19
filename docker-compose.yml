@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  db:
+    image: 'postgres:13.1-alpine'
+    container_name: todo_api_database
+    environment:
+      - POSTGRES_USER=todo_api
+      - POSTGRES_PASSWORD=q5Yi7c3RczOeupi8vq3H

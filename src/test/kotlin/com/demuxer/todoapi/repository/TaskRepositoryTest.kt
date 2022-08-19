@@ -1,11 +1,14 @@
 package com.demuxer.todoapi.repository
 
 import com.demuxer.todoapi.entity.TaskEntity
+import com.demuxer.todoapi.exception.ResourceNotFoundException
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 
+// TODO fix tests
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TaskRepositoryTest {
@@ -18,16 +21,17 @@ class TaskRepositoryTest {
     private val startDate = Date()
     private val endDate = Date()
 
+    private val task = TaskEntity(taskId, taskDescription, startDate, endDate)
+
     @BeforeAll
     fun setUp() {
-        val task = TaskEntity(taskId, taskDescription, startDate, endDate)
         taskRepository.save(task)
     }
 
     @Test
     fun getAllTaskTest() {
-        // given
-        val tasks = taskRepository.findAll()
+        // when
+        val tasks = taskRepository.findAll().toList()
 
         // then
         Assertions.assertEquals(1, tasks.size)
@@ -35,11 +39,11 @@ class TaskRepositoryTest {
 
     @Test
     fun getTaskTest() {
-        // given
-        val task = taskRepository.get(taskId)
+        // when
+        val filteredTask = taskRepository.findByIdOrNull(taskId)
 
         // then
-        Assertions.assertNotEquals(null, task)
+        Assertions.assertEquals(task, filteredTask)
     }
 
     @Test
@@ -51,50 +55,41 @@ class TaskRepositoryTest {
         val savedTask = taskRepository.save(task)
 
         // then
-        Assertions.assertEquals(savedTask, task)
+        Assertions.assertEquals(task, savedTask)
     }
 
     @Test
     fun saveTaskWithErrorTest() {
-        // given
-        val task = TaskEntity(taskId, taskDescription, startDate, endDate)
-
         // then
         Assertions.assertThrows(Exception::class.java) { taskRepository.save(task) }
     }
 
-    // TODO fix these tests
     @Test
     fun updateTaskWithSuccessTest() {
 
         // given
+        val oldDescription = "This is the old description"
         val newDescription = "This is a new description"
+        taskRepository.save(TaskEntity(taskId, oldDescription, startDate, endDate))
 
         // when
-        val updateCode = taskRepository.update(taskId, newDescription, startDate, endDate)
+        val updatedTask = taskRepository.save(TaskEntity(taskId, newDescription, startDate, endDate))
 
         // then
-        Assertions.assertEquals(1, updateCode)
-        Assertions.assertEquals(1, taskRepository.count())
-    }
-
-    @Test
-    fun deleteTaskWithErrorTest() {
-        // when
-        val deleteCode = taskRepository.delete(UUID.randomUUID())
-
-        // then
-        Assertions.assertEquals(0, deleteCode)
-        Assertions.assertEquals(1, taskRepository.count())
+        Assertions.assertEquals(newDescription, updatedTask.description)
     }
 
     @Test
     fun deleteTaskWithSuccessTest() {
         // when
-        val deleteCode = taskRepository.delete(taskId)
+        taskRepository.delete(task)
 
         // then
-        Assertions.assertEquals(1, deleteCode)
         Assertions.assertEquals(0, taskRepository.count())
+    }
+
+    @AfterAll
+    fun tearDown() {
+        taskRepository.deleteAll()
     }
 }
