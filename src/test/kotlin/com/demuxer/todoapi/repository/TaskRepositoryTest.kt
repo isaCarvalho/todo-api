@@ -1,16 +1,16 @@
 package com.demuxer.todoapi.repository
 
 import com.demuxer.todoapi.entity.TaskEntity
-import com.demuxer.todoapi.exception.ResourceNotFoundException
 import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import java.util.*
+import javax.transaction.Transactional
 
-// TODO fix tests
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 class TaskRepositoryTest {
 
     @Autowired
@@ -23,7 +23,7 @@ class TaskRepositoryTest {
 
     private val task = TaskEntity(taskId, taskDescription, startDate, endDate)
 
-    @BeforeAll
+    @BeforeEach
     fun setUp() {
         taskRepository.save(task)
     }
@@ -39,10 +39,14 @@ class TaskRepositoryTest {
 
     @Test
     fun getTaskTest() {
+        // given
+        val tasks = taskRepository.findAll().toList()
+
         // when
         val filteredTask = taskRepository.findByIdOrNull(taskId)
 
         // then
+        Assertions.assertEquals(1, tasks.size)
         Assertions.assertEquals(task, filteredTask)
     }
 
@@ -56,12 +60,6 @@ class TaskRepositoryTest {
 
         // then
         Assertions.assertEquals(task, savedTask)
-    }
-
-    @Test
-    fun saveTaskWithErrorTest() {
-        // then
-        Assertions.assertThrows(Exception::class.java) { taskRepository.save(task) }
     }
 
     @Test
@@ -82,14 +80,10 @@ class TaskRepositoryTest {
     @Test
     fun deleteTaskWithSuccessTest() {
         // when
-        taskRepository.delete(task)
+        taskRepository.deleteById(taskId)
+        val task = taskRepository.findById(taskId)
 
         // then
-        Assertions.assertEquals(0, taskRepository.count())
-    }
-
-    @AfterAll
-    fun tearDown() {
-        taskRepository.deleteAll()
+        Assertions.assertTrue(task.isEmpty)
     }
 }

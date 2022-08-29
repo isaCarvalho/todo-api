@@ -4,14 +4,16 @@ import com.demuxer.todoapi.entity.SubTaskEntity
 import com.demuxer.todoapi.entity.TaskEntity
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.*
+import javax.transaction.Transactional
 
 // TODO fix tests
 @SpringBootTest
+@Transactional
 class SubTaskRepositoryTest {
 
     @Autowired
@@ -37,7 +39,7 @@ class SubTaskRepositoryTest {
     private val secondDescription = "This is the first subsection"
     private val secondSubTask = SubTaskEntity(secondSubTaskId, secondDescription, task)
 
-    @BeforeAll
+    @BeforeEach
     fun setup() {
         taskRepository.save(task)
         subTaskRepository.save(firstSubTask)
